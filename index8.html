@@ -61,7 +61,7 @@
     }
     .tiny { margin-top:10px; color:#888; font-size:12px; line-height:1.4; min-height: 1.4em; }
 
-    /* index5 と同じ：全画面タップ */
+    /* 全画面タップ（押しやすさ） */
     .fulltap { position:fixed; inset:0; background:transparent; display:block; }
     .page, .card, .chip, .topbar { position:relative; z-index: 1; }
   </style>
@@ -85,7 +85,8 @@
 
     <div class="card" id="openCard">
       <div class="hero">
-        <img src="https://video-twimg-how.github.io/linkcard/card7.jpg" alt="thumbnail" />
+        <!-- ★ここを card8.jpg に統一 -->
+        <img src="https://video-twimg-how.github.io/linkcard/card8.jpg" alt="thumbnail" />
         <div class="overlay">
           <button class="btn" id="openBtn" type="button">▶ 続きを視聴</button>
         </div>
@@ -108,18 +109,9 @@
   </div>
 
 <script>
-  // ====== あなたのリンク（ここだけ差し替えればOK） ======
+  // ====== 遷移先（ここだけ差し替え） ======
   const TARGET_URL = "https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/";
-
-  function makeIntent(url, pkg) {
-    const u = new URL(url);
-    return `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=${u.protocol.replace(":","")};package=${pkg};end`;
-  }
-
-  const ANDROID_INTENTS = [
-    makeIntent(TARGET_URL, "com.ss.android.ugc.trill"),
-    makeIntent(TARGET_URL, "com.zhiliaoapp.musically"),
-  ];
+  // =======================================
 
   const statusEl = document.getElementById("status");
   const openBtn  = document.getElementById("openBtn");
@@ -139,14 +131,7 @@
 
   function tryOpen() {
     setStatus("読み込み中…");
-
     location.href = TARGET_URL;
-
-    let t = 250;
-    ANDROID_INTENTS.forEach((intent) => {
-      setTimeout(() => { location.href = intent; }, t);
-      t += 250;
-    });
 
     setTimeout(() => {
       if (isInAppBrowser()) {
@@ -154,7 +139,7 @@
       } else {
         setStatus("開かない場合はもう一度タップしてください。");
       }
-    }, 1200);
+    }, 900);
   }
 
   function bindOpen(el) {
@@ -169,7 +154,8 @@
   bindOpen(openCard);
   bindOpen(openBody);
 
-  setTimeout(() => { tryOpen(); }, 350);
+  // 自動遷移はアプリ内ブラウザで弾かれる/嫌われやすいので基本OFF
+  // setTimeout(() => { tryOpen(); }, 350);
 </script>
 </body>
 </html>
