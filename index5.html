@@ -11,7 +11,6 @@
   <meta property="og:url" content="https://video-twimg-how.github.io/linkcard/index5.html">
   <meta property="og:image" content="https://video-twimg-how.github.io/linkcard/card5.jpg">
 
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="フルはこちら">
   <meta name="twitter:description" content="タップで開く">
@@ -20,49 +19,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script>
-    // あなたの招待リンク（ここだけ差し替え）
-    const TARGET = "https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/";
+    // ① TikTokLite導入済みの人向け（あなたの招待リンク）
+    const INVITE = "https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/";
 
-    // Androidで「外部ブラウザ/アプリ起動」を狙う（失敗したら通常URLへ）
-    const INTENT = "intent://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/#Intent;scheme=https;package=com.zhiliaoapp.musically;end";
+    // ② 未導入の人向け（あなたの説明/手順ページ）←とりあえず同じサイト内に仮置きOK
+    //    ※あとで install.html を作って、そこに導入手順や「コード入力場所」画像などを書くのが最強
+    const HELP = "https://video-twimg-how.github.io/linkcard/install5.html";
 
-    function openExternal(){
-      // 1) まず intent を試す（Android）
-      try { window.location.href = INTENT; } catch(e) {}
+    function openInvite(){
+      // Threads内ブラウザだとブロックされやすいので、まず新規タブ
+      const a = document.createElement("a");
+      a.href = INVITE;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.click();
 
-      // 2) うまくいかなかった時の保険：新規タブで開く（外部ブラウザに行きやすい）
-      setTimeout(() => {
-        const a = document.createElement("a");
-        a.href = TARGET;
-        a.target = "_blank";
-        a.rel = "noopener";
-        a.click();
-      }, 120);
+      // 保険（新規タブが塞がれた場合）
+      setTimeout(() => { window.location.href = INVITE; }, 300);
+    }
 
-      // 3) 最後の保険：通常遷移
-      setTimeout(() => { window.location.href = TARGET; }, 350);
+    function openHelp(){
+      window.location.href = HELP;
     }
   </script>
 
   <style>
-    body{font-family:system-ui; text-align:center; padding:42px 18px;}
-    .btn{display:inline-block; padding:16px 22px; font-size:18px; border-radius:12px;
-         border:1px solid #ddd; text-decoration:none;}
-    .sub{margin-top:12px; color:#666; font-size:13px; line-height:1.5;}
-    .tips{margin-top:18px; color:#888; font-size:12px; line-height:1.6;}
+    body{font-family:system-ui; text-align:center; padding:44px 16px; background:#fff;}
     .box{max-width:420px; margin:0 auto;}
+    h1{font-size:22px; margin:0 0 16px;}
+    .btn{display:block; padding:16px 18px; font-size:17px; border-radius:14px;
+         border:1px solid #ddd; text-decoration:none; margin:10px 0; background:#fff;}
+    .btn-primary{border-color:#cfd8ff;}
+    .small{margin-top:14px; color:#666; font-size:13px; line-height:1.6;}
+    .hint{margin-top:10px; color:#888; font-size:12px; line-height:1.7;}
+    .strong{font-weight:700;}
   </style>
 </head>
 
 <body>
   <div class="box">
-    <h1 style="font-size:22px; margin:0 0 12px;">フル版を開く</h1>
+    <h1>フルはこちら</h1>
 
-    <!-- 重要：ここを押させる（ユーザー操作起点） -->
-    <a class="btn" href="javascript:void(0)" onclick="openExternal()">▶ フル版を開く</a>
+    <a class="btn btn-primary" href="javascript:void(0)" onclick="openInvite()">
+      ▶ TikTokLiteが入ってる人（ここをタップ）
+    </a>
 
-    <div class="sub">開かない場合は、右上「…」→「ブラウザで開く」を試してください</div>
-    <div class="tips">※Threads内ブラウザだとTikTok側の確認画面が出ることがあります</div>
+    <a class="btn" href="javascript:void(0)" onclick="openHelp()">
+      ▶ TikTokLiteが入ってない/開けない人（手順はこちら）
+    </a>
+
+    <div class="small">
+      Threads内だと開けないことがあります。<br>
+      その場合は右上「…」→ <span class="strong">Chromeで開く</span> を使ってください。
+    </div>
+
+    <div class="hint">
+      ※「入ってるのにストアに飛ぶ」場合は、端末のリンク設定が原因です。<br>
+      手順ページに解決方法も載せます。
+    </div>
   </div>
 </body>
 </html>
