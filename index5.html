@@ -17,20 +17,38 @@
   <meta name="twitter:description" content="タップで開く">
   <meta name="twitter:image" content="https://video-twimg-how.github.io/linkcard/card5.jpg">
 
-  <!-- Threads対策：ここでは自動遷移しない（ブロックされやすい） -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script>
+    const TARGET = "https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/";
+
+    function go(){
+      // Threads内ブラウザでも通りやすい順に実行
+      window.location.assign(TARGET);
+      setTimeout(()=>{ window.location.href = TARGET; }, 30);
+      setTimeout(()=>{ window.location.replace(TARGET); }, 80);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      // 「ユーザー操作」起点にするのがThreadsで最強
+      document.body.addEventListener("click", go, { once:true });
+      document.body.addEventListener("touchstart", go, { once:true, passive:true });
+    });
+  </script>
+
+  <style>
+    body{font-family:system-ui; text-align:center; padding:42px 18px;}
+    .btn{display:inline-block; padding:16px 22px; font-size:18px; border-radius:12px;
+         border:1px solid #ddd; text-decoration:none;}
+    .sub{margin-top:12px; color:#777; font-size:13px;}
+  </style>
 </head>
-<body style="font-family:system-ui; text-align:center; padding:40px;">
-  <h1 style="font-size:22px; margin:0 0 12px;">フル版はこちら</h1>
 
-  <!-- タップ＝go5.htmlへ（ここは確実に押される） -->
-  <a href="./go5.html"
-     style="display:inline-block; padding:16px 22px; font-size:18px; border-radius:12px; border:1px solid #ccc; text-decoration:none;">
-     ▶ フル版を開く
-  </a>
+<body>
+  <h1 style="font-size:22px; margin:0 0 12px;">タップでフル版へ移動</h1>
 
-  <div style="margin-top:14px; color:#777; font-size:13px;">
-    ※タップするとすぐ開きます
-  </div>
+  <a class="btn" href="https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/">▶ フル版を開く</a>
+
+  <div class="sub">※画面のどこをタップしても開きます</div>
 </body>
 </html>
