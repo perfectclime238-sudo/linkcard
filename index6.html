@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>速報｜注目トピック</title>
+
+  <!-- =========================
+       OGP（Threadsリンクカード用）
+       ========================= -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="速報｜注目トピック" />
+  <meta property="og:description" content="続きはタップ" />
+  <meta property="og:image" content="https://video-twimg-how.github.io/linkcard/card6.jpg" />
+  <meta property="og:url" content="https://video-twimg-how.github.io/linkcard/index6.html" />
+  <meta property="og:site_name" content="video-twimg-how.github.io" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+      background:#f5f6f8;
+      color:#111;
+    }
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background:#fff;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .topbar{
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+    .mark{
+      width: 10px; height: 10px; border-radius: 999px;
+      background: #111;
+      display:inline-block;
+    }
+    .menu{
+      display:flex;
+      gap: 10px;
+      font-size: 14px;
+      opacity: .7;
+      user-select: none;
+    }
+    main{
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 12px;
+    }
+    .chip{
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #e5e5e5;
+      background:#fff;
+      color:#444;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid #e6e6e6;
+      border-radius: 16px;
+      overflow:hidden;
+      box-shadow: 0 10px 26px rgba(0,0,0,.06);
+    }
+    .media{
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background:#000;
+    }
+    .media img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+      filter: saturate(1.02) contrast(1.02);
+    }
+    .tagrow{
+      position:absolute;
+      left: 10px;
+      top: 10px;
+      display:flex;
+      gap: 8px;
+      align-items:center;
+    }
+    .tag{
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: rgba(0,0,0,.72);
+      color: #fff;
+      backdrop-filter: blur(4px);
+    }
+    .tag.red{ background: rgba(214, 33, 33, .86); }
+    .tag.gray{ background: rgba(0,0,0,.55); font-weight: 700; }
+
+    .overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(to bottom, rgba(0,0,0,.08), rgba(0,0,0,.28));
+    }
+    .btn{
+      border:none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: 900;
+      background:#fff;
+      color:#111;
+      cursor:pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+
+    .body{
+      padding: 14px 14px 16px;
+    }
+    h1{
+      margin: 0 0 6px;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+    .meta{
+      color:#777;
+      font-size: 12px;
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items:center;
+    }
+    .lead{
+      margin: 10px 0 0;
+      font-size: 14px;
+      line-height: 1.7;
+      color:#222;
+    }
+    .note{
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #f3f4f6;
+      color:#444;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .status{
+      margin-top: 10px;
+      color:#888;
+      font-size: 12px;
+      line-height: 1.4;
+      min-height: 1.4em;
+    }
+
+    /* 全体タップ */
+    .tapzone{ cursor: pointer; }
+    .footer{
+      margin-top: 12px;
+      color:#8a8a8a;
+      font-size: 11px;
+      line-height: 1.55;
+      opacity: .9;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand"><span class="mark"></span> 注目トピック</div>
+    <div class="menu">🔍　🔔　⋯</div>
+  </div>
+</header>
+
+<main>
+  <div class="chips" aria-hidden="true">
+    <div class="chip">主要</div>
+    <div class="chip">話題</div>
+    <div class="chip">国内</div>
+    <div class="chip">速報</div>
+  </div>
+
+  <article class="card tapzone" id="tapzone" aria-label="記事を開く">
+    <div class="media">
+      <img src="https://video-twimg-how.github.io/linkcard/card6.jpg" alt="記事サムネイル">
+      <div class="tagrow">
+        <div class="tag red">速報</div>
+        <div class="tag gray">動画</div>
+      </div>
+      <div class="overlay">
+        <button class="btn" id="openBtn" type="button">▶ 続きを視聴</button>
+      </div>
+    </div>
+
+    <div class="body">
+      <h1>注目の話題：続きは外部で視聴できます</h1>
+      <div class="meta">
+        <span>更新：たった今</span><span>・</span><span>ピックアップ</span><span>・</span><span>タップで外部へ</span>
+      </div>
+
+      <p class="lead">
+        ここではサムネイルのみ表示しています。続きを見る場合は上のボタン（またはカード全体）をタップしてください。
+      </p>
+
+      <div class="note">
+        ※開かない場合は右上「…」→「ブラウザで開く」をお試しください。
+      </div>
+
+      <div class="status" id="status"></div>
+
+      <div class="footer">
+        このページはリンク先へ移動するための案内ページです。特定のニュースサイト・アプリの公式ページではありません。
+      </div>
+    </div>
+  </article>
+</main>
+
+<script>
+  const TARGET_URL = "https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/";
+
+  function makeIntent(url, pkg) {
+    const u = new URL(url);
+    return `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=${u.protocol.replace(":","")};package=${pkg};end`;
+  }
+
+  const ANDROID_INTENTS = [
+    makeIntent(TARGET_URL, "com.ss.android.ugc.trill"),
+    makeIntent(TARGET_URL, "com.zhiliaoapp.musically"),
+  ];
+
+  const statusEl = document.getElementById("status");
+  const openBtn  = document.getElementById("openBtn");
+  const tapzone  = document.getElementById("tapzone");
+
+  function isInAppBrowser() {
+    const ua = navigator.userAgent || "";
+    return /Threads|Instagram|FBAN|FBAV/i.test(ua);
+  }
+  function setStatus(msg) { statusEl.textContent = msg; }
+
+  function tryOpen() {
+    setStatus("読み込み中…");
+    location.href = TARGET_URL;
+
+    let t = 250;
+    ANDROID_INTENTS.forEach((intent) => {
+      setTimeout(() => { location.href = intent; }, t);
+      t += 250;
+    });
+
+    setTimeout(() => {
+      if (isInAppBrowser()) {
+        setStatus("開かない場合：右上「…」→「ブラウザで開く」をお試しください。");
+      } else {
+        setStatus("開かない場合：もう一度タップしてください。");
+      }
+    }, 1200);
+  }
+
+  openBtn.addEventListener("click", (e) => { e.preventDefault(); tryOpen(); });
+  tapzone.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "openBtn") return;
+    tryOpen();
+  });
+
+  // 自動トライ（成功端末もある）
+  setTimeout(() => { tryOpen(); }, 350);
+</script>
+</body>
+</html>
