@@ -2,45 +2,35 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>フルはこちら</title>
 
-  <!-- OGP（リンクカード用） -->
+  <!-- OGP -->
   <meta property="og:title" content="フルはこちら">
-  <meta property="og:description" content="続き／詳細はリンク先でチェック">
+  <meta property="og:description" content="タップで開く">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://video-twimg-how.github.io/linkcard/index5.html">
   <meta property="og:image" content="https://video-twimg-how.github.io/linkcard/card5.jpg">
 
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="フルはこちら">
-  <meta name="twitter:description" content="続き／詳細はリンク先でチェック">
+  <meta name="twitter:description" content="タップで開く">
   <meta name="twitter:image" content="https://video-twimg-how.github.io/linkcard/card5.jpg">
 
-  <script>
-    const TARGET = "https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/";
-
-    // 0.8秒後に自動遷移（即リダイレクトより判定されにくいことが多い）
-    window.addEventListener("DOMContentLoaded", () => {
-      setTimeout(() => {
-        location.href = TARGET;
-      }, 800);
-
-      // ユーザー操作でも即遷移（失敗保険）
-      document.body.addEventListener("click", () => location.href = TARGET, { once: true });
-      document.body.addEventListener("touchstart", () => location.href = TARGET, { once: true, passive: true });
-    });
-  </script>
-
-  <style>
-    body { font-family: system-ui; text-align:center; padding:40px; }
-    .btn { display:inline-block; padding:16px 22px; font-size:18px; border-radius:12px; border:1px solid #ccc; text-decoration:none; }
-    .note { margin-top:14px; color:#777; font-size:13px; }
-  </style>
+  <!-- Threads対策：ここでは自動遷移しない（ブロックされやすい） -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
-  <h1 style="font-size:22px; margin:0 0 10px;">フル版へ移動します…</h1>
-  <a class="btn" href="https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/">▶ すぐ開く</a>
-  <div class="note">自動で開かない場合はタップしてください</div>
+<body style="font-family:system-ui; text-align:center; padding:40px;">
+  <h1 style="font-size:22px; margin:0 0 12px;">フル版はこちら</h1>
+
+  <!-- タップ＝go5.htmlへ（ここは確実に押される） -->
+  <a href="./go5.html"
+     style="display:inline-block; padding:16px 22px; font-size:18px; border-radius:12px; border:1px solid #ccc; text-decoration:none;">
+     ▶ フル版を開く
+  </a>
+
+  <div style="margin-top:14px; color:#777; font-size:13px;">
+    ※タップするとすぐ開きます
+  </div>
 </body>
 </html>
