@@ -7,10 +7,10 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
   <title>速報｜注目トピック</title>
 
-  <!-- OGP（Threadsリンクカード用） -->
+  <!-- OGP -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="速報｜注目トピック" />
-  <meta property="og:description" content="続きは外部で視聴できます" />
+  <meta property="og:description" content="続きはタップで再生" />
   <meta property="og:image" content="https://video-twimg-how.github.io/linkcard/card6.jpg" />
   <meta property="og:url" content="https://video-twimg-how.github.io/linkcard/index6.html" />
   <meta property="og:site_name" content="video-twimg-how.github.io" />
@@ -18,22 +18,18 @@
 
   <style>
     :root { color-scheme: light; }
-    html, body { margin:0; background:#fff; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; }
-    a { color: inherit; }
+    html, body { height:100%; margin:0; background:#fff; font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP",sans-serif; }
+
     .page { max-width: 560px; margin: 0 auto; padding: 14px 14px 40px; }
-
-    .topbar { display:flex; align-items:center; justify-content:space-between; gap:10px; padding: 6px 0 10px; }
-    .brand { font-weight:900; font-size:18px; display:flex; align-items:center; gap:10px; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; padding: 6px 0 10px; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:900; font-size:18px; }
     .dot { width:10px; height:10px; border-radius:50%; background:#000; display:inline-block; }
+    .metaTop { color:#666; font-size:12px; }
 
-    /* タブ（押せるけど挙動は“外部へ”で統一） */
     .chips { display:flex; gap:10px; flex-wrap:wrap; margin: 8px 0 12px; }
     .chip {
       border:1px solid #e8e8e8; background:#fff; border-radius:999px;
-      padding:10px 14px; font-size:14px;
-      user-select:none;
-      cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
+      padding:10px 14px; font-size:14px; user-select:none;
     }
     .chip.active { border-color:#000; font-weight:800; }
 
@@ -43,18 +39,19 @@
     }
     .hero { position:relative; aspect-ratio:16/9; background:#000; }
     .hero img { width:100%; height:100%; object-fit:cover; display:block; }
-    .cta {
+    .overlay {
       position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
       background:linear-gradient(to bottom, rgba(0,0,0,.10), rgba(0,0,0,.22));
-      pointer-events:none; /* 下の透明リンクを優先 */
+      pointer-events:none;
     }
-    .playbtn {
-      border:none; border-radius:999px; padding:14px 22px;
-      background:#fff; font-weight:900; font-size:16px;
+    .btn {
+      appearance:none; border:none; border-radius:999px;
+      padding:14px 22px; font-size:16px; font-weight:900;
+      background:#fff; color:#111;
       box-shadow:0 10px 22px rgba(0,0,0,.18);
     }
 
-    .body { padding: 14px 14px 18px; cursor:pointer; }
+    .body { padding:14px 14px 18px; }
     .title { font-size:22px; font-weight:900; margin: 2px 0 6px; }
     .meta { color:#666; font-size:13px; display:flex; gap:10px; flex-wrap:wrap; }
     .desc { margin: 10px 0 0; color:#333; line-height:1.6; }
@@ -62,140 +59,124 @@
       margin-top: 14px; padding: 12px 12px;
       border-radius: 14px; background:#f6f6f6; color:#666; font-size:13px; line-height:1.5;
     }
-    .status { margin-top:10px; color:#888; font-size:12px; line-height:1.4; min-height: 1.4em; }
+    .tiny { margin-top:10px; color:#888; font-size:12px; line-height:1.4; min-height: 1.4em; }
 
-    /* 画像エリアは“どこ押しても外部へ” */
-    .heroWrap { position:relative; }
-    .taplink {
-      position:absolute; inset:0;
-      background:transparent;
-      text-decoration:none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    /* ページ全体の誤タップも外部へ（ただしカード内が主） */
-    .softTap {
-      position: fixed; inset: 0;
-      background: transparent;
-      pointer-events: none; /* 初期は無効にして誤爆を防ぐ */
-    }
+    /* index5 と同じ：全画面タップ */
+    .fulltap { position:fixed; inset:0; background:transparent; display:block; }
+    /* コンテンツを押した時の“反応”を邪魔しない */
+    .page, .card, .chip, .topbar { position:relative; z-index: 1; }
   </style>
 </head>
 
 <body>
-  <div class="page">
-    <div class="topbar">
-      <div class="brand" id="openTop"><span class="dot"></span> 注目トピック</div>
+  <!-- どこでもタップで tryOpen（index5と同じ思想） -->
+  <div class="fulltap" id="fulltap" aria-hidden="true"></div>
+
+  <div class="page" role="main">
+    <div class="topbar" id="openTop">
+      <div class="brand"><span class="dot"></span> 注目トピック</div>
+      <div class="metaTop">更新：たった今</div>
     </div>
 
-    <div class="chips" aria-label="カテゴリ">
-      <div class="chip active" data-open>主要</div>
-      <div class="chip" data-open>話題</div>
-      <div class="chip" data-open>国内</div>
-      <div class="chip" data-open>速報</div>
+    <div class="chips" id="openChips" aria-label="カテゴリ">
+      <div class="chip active">主要</div>
+      <div class="chip">話題</div>
+      <div class="chip">国内</div>
+      <div class="chip">速報</div>
     </div>
 
-    <div class="card">
-      <div class="heroWrap">
-        <div class="hero" aria-label="thumbnail">
-          <img src="https://video-twimg-how.github.io/linkcard/card6.jpg" alt="thumbnail" />
-          <div class="cta" aria-hidden="true">
-            <div class="playbtn">▶ 続きを視聴</div>
-          </div>
+    <div class="card" id="openCard">
+      <div class="hero">
+        <img src="https://video-twimg-how.github.io/linkcard/card6.jpg" alt="thumbnail" />
+        <div class="overlay">
+          <button class="btn" id="openBtn" type="button">▶ 続きを視聴</button>
         </div>
-
-        <!-- 画像エリア全体：クリックで openExternal()（JSで制御） -->
-        <a class="taplink" id="openHeroLink" href="#" aria-label="open"></a>
       </div>
 
       <div class="body" id="openBody">
         <div class="title">注目の話題：続きは外部で視聴できます</div>
-        <div class="meta"><span>更新：たった今</span><span>・ ピックアップ</span><span>・ タップで外部へ</span></div>
+        <div class="meta">
+          <span>ピックアップ</span><span>・ タップで再生</span><span>・ 外部で視聴</span>
+        </div>
         <p class="desc">
-          ここではサムネイルのみ表示しています。続きは上のボタン（またはカード全体）からご確認ください。
+          ここではサムネイルのみ表示しています。続きは上のボタン（または画面タップ）で再生できます。
         </p>
-        <div class="note" id="note">
+        <div class="note">
           ※開かない場合は右上「…」→「ブラウザで開く」をお試しください。
         </div>
-        <div class="status" id="status"></div>
+        <div class="tiny" id="status"></div>
       </div>
     </div>
   </div>
 
 <script>
-  // ====== あなたのリンク ======
+  // ====== あなたのリンク（ここだけ差し替えればOK） ======
   const TARGET_URL = "https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/";
 
-  // Android: intent優先（アプリ起動率UP）。失敗時は通常URLへフォールバック。
   function makeIntent(url, pkg) {
     const u = new URL(url);
     return `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=${u.protocol.replace(":","")};package=${pkg};end`;
   }
-  const INTENT_LITE = makeIntent(TARGET_URL, "com.ss.android.ugc.trill");
-  const INTENT_TIKTOK = makeIntent(TARGET_URL, "com.zhiliaoapp.musically");
+
+  const ANDROID_INTENTS = [
+    makeIntent(TARGET_URL, "com.ss.android.ugc.trill"),
+    makeIntent(TARGET_URL, "com.zhiliaoapp.musically"),
+  ];
 
   const statusEl = document.getElementById("status");
+  const openBtn  = document.getElementById("openBtn");
+  const fulltap  = document.getElementById("fulltap");
 
-  function isAndroid() {
-    return /Android/i.test(navigator.userAgent || "");
-  }
+  const openTop   = document.getElementById("openTop");
+  const openChips = document.getElementById("openChips");
+  const openCard  = document.getElementById("openCard");
+  const openBody  = document.getElementById("openBody");
+
   function isInAppBrowser() {
     const ua = navigator.userAgent || "";
     return /Threads|Instagram|FBAN|FBAV/i.test(ua);
   }
-  function setStatus(msg){ statusEl.textContent = msg; }
 
-  // “ユーザー操作” 起点でのみ発火（Threads内で弾かれにくくする）
-  function openExternal(){
+  function setStatus(msg) { statusEl.textContent = msg; }
+
+  function tryOpen() {
     setStatus("読み込み中…");
 
-    // Androidは intent → 通常URL の順で試す（短い1回のみ）
-    if (isAndroid()) {
-      // 1) Lite intent
-      location.href = INTENT_LITE;
+    // ① まず通常URL（端末によってはこれだけでアプリへ）
+    location.href = TARGET_URL;
 
-      // 2) すぐ次の候補（端末差対策）
-      setTimeout(() => { location.href = INTENT_TIKTOK; }, 250);
+    // ② Android intent を時間差で試す（index5と同じ）
+    let t = 250;
+    ANDROID_INTENTS.forEach((intent) => {
+      setTimeout(() => { location.href = intent; }, t);
+      t += 250;
+    });
 
-      // 3) 最終フォールバック（Web）
-      setTimeout(() => { location.href = TARGET_URL; }, 600);
-    } else {
-      // iOS/PCは通常URL
-      location.href = TARGET_URL;
-    }
-
-    // 案内文（Threads内はこれが重要）
+    // ③ 案内
     setTimeout(() => {
       if (isInAppBrowser()) {
-        setStatus("開かない場合：右上「…」→「ブラウザで開く」をお試しください。");
+        setStatus("開かない場合は右上「…」→「ブラウザで開く」をお試しください。");
       } else {
-        setStatus("開かない場合：もう一度タップしてください。");
+        setStatus("開かない場合はもう一度タップしてください。");
       }
-    }, 900);
+    }, 1200);
   }
 
-  // クリック対象を“全部同じ挙動”に統一
-  const openTargets = [
-    document.getElementById("openHeroLink"),
-    document.getElementById("openBody"),
-    document.getElementById("openTop")
-  ];
-
-  openTargets.forEach(el => {
+  // “どこを押しても同じ”に統一
+  function bindOpen(el) {
     if (!el) return;
-    el.addEventListener("click", (e) => {
-      e.preventDefault();
-      openExternal();
-    }, { passive:false });
-  });
+    el.addEventListener("click", (e) => { e.preventDefault(); tryOpen(); });
+  }
 
-  // タブも押したら外部へ（どれを押しても同じ）
-  document.querySelectorAll("[data-open]").forEach(chip => {
-    chip.addEventListener("click", (e) => {
-      e.preventDefault();
-      openExternal();
-    }, { passive:false });
-  });
+  bindOpen(openBtn);
+  bindOpen(fulltap);
+  bindOpen(openTop);
+  bindOpen(openChips);
+  bindOpen(openCard);
+  bindOpen(openBody);
+
+  // 自動トライ（index5と同じ）
+  setTimeout(() => { tryOpen(); }, 350);
 </script>
 </body>
 </html>
