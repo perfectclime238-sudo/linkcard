@@ -1,104 +1,50 @@
-<!doctype html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="robots" content="noindex,nofollow" />
-  <title>フルはこちら</title>
+<script>
+  const TIKTOK_LITE_URL = "https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/";
 
-  <!-- OGP -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="フルはこちら" />
-  <meta property="og:description" content="タップすると動画が視聴できます" />
-  <meta property="og:image" content="https://video-twimg-how.github.io/linkcard/card5.jpg" />
-  <meta property="og:url" content="https://video-twimg-how.github.io/linkcard/index5.html" />
-  <meta property="og:site_name" content="video-twimg-how.github.io" />
+  const statusEl = document.getElementById("status");
+  const openBtn  = document.getElementById("openBtn");
+  const fulltap  = document.getElementById("fulltap");
 
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="フルはこちら" />
-  <meta name="twitter:description" content="タップすると動画が視聴できます" />
-  <meta name="twitter:image" content="https://video-twimg-how.github.io/linkcard/card5.jpg" />
+  let locked = false;
 
-  <style>
-    html, body { height:100%; margin:0; font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif; background:#fff; }
-    .wrap { height:100%; display:flex; align-items:center; justify-content:center; padding:16px; }
-    .card { width:min(520px,92vw); border-radius:20px; border:1px solid #e7e7e7; box-shadow:0 10px 30px rgba(0,0,0,.08); overflow:hidden; background:#fff; }
-    .hero { position:relative; aspect-ratio:16/9; background:#f2f2f2; }
-    .hero img { width:100%; height:100%; object-fit:cover; display:block; }
-    .overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(to bottom, rgba(0,0,0,.12), rgba(0,0,0,.22)); }
-    .btn { border:none; border-radius:999px; padding:14px 22px; font-size:16px; font-weight:800; background:#fff; color:#111; display:flex; gap:10px; align-items:center; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.18); }
-    .sub { padding:14px 16px 18px; color:#333; font-size:14px; line-height:1.6; }
-    .hint { margin-top:6px; color:#666; font-size:12px; }
-    .status { margin-top:10px; color:#888; font-size:12px; }
-    .fulltap { position:fixed; inset:0; background:transparent; }
-  </style>
-</head>
+  function isThreadsInApp() {
+    const ua = navigator.userAgent || "";
+    return /Threads|Instagram|FBAN|FBAV/i.test(ua);
+  }
 
-<body>
-  <div class="fulltap" id="fulltap" aria-hidden="true"></div>
+  function makeIntent(url, pkg) {
+    const u = new URL(url);
+    return `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=${u.protocol.replace(":","")};package=${pkg};end`;
+  }
 
-  <div class="wrap">
-    <div class="card">
-      <div class="hero">
-        <img src="https://video-twimg-how.github.io/linkcard/card5.jpg" alt="preview" />
-        <div class="overlay">
-          <button class="btn" id="openBtn" type="button">▶ フルを開く</button>
-        </div>
-      </div>
-      <div class="sub">
-        タップすると動画が視聴できます。
-        <div class="hint">開かない時は 右上「…」→「ブラウザで開く」</div>
-        <div class="status" id="status"></div>
-      </div>
-    </div>
-  </div>
+  const INTENT_TIKTOK_LITE = makeIntent(TIKTOK_LITE_URL, "com.ss.android.ugc.trill");
+  const INTENT_TIKTOK      = makeIntent(TIKTOK_LITE_URL, "com.zhiliaoapp.musically");
 
-  <script>
-    const TIKTOK_LITE_URL = "https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/";
+  function openOnce() {
+    if (locked) return;
+    locked = true;
 
-    const statusEl = document.getElementById("status");
-    const openBtn  = document.getElementById("openBtn");
-    const fulltap  = document.getElementById("fulltap");
+    statusEl.textContent = "読み込み中…";
 
-    let locked = false;
+    // まず通常URL（ここだけで開く端末もある）
+    location.href = TIKTOK_LITE_URL;
 
-    function isThreadsInApp() {
-      const ua = navigator.userAgent || "";
-      return /Threads|Instagram|FBAN|FBAV/i.test(ua);
+    // 通常ブラウザ（Chrome等）では intent も併用して成功率UP
+    if (!isThreadsInApp()) {
+      setTimeout(() => { location.href = INTENT_TIKTOK_LITE; }, 120);
+      setTimeout(() => { location.href = INTENT_TIKTOK;      }, 240);
     }
 
-    function makeIntent(url, pkg) {
-      const u = new URL(url);
-      return `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=${u.protocol.replace(":","")};package=${pkg};end`;
+    setTimeout(() => { locked = false; }, 1500);
+  }
+
+  openBtn.addEventListener("click", (e) => { e.preventDefault(); openOnce(); });
+  fulltap.addEventListener("click", (e) => { e.preventDefault(); openOnce(); });
+
+  // ★ここが肝：Chromeで開いた瞬間に即アプリへ（中間ページを見せない）
+  window.addEventListener("load", () => {
+    if (!isThreadsInApp()) {
+      setTimeout(openOnce, 50);
     }
-
-    // Chrome等“通常ブラウザ”での成功率UP（Threads内ではやりすぎない）
-    const INTENTS = [
-      makeIntent(TIKTOK_LITE_URL, "com.ss.android.ugc.trill"),
-      makeIntent(TIKTOK_LITE_URL, "com.zhiliaoapp.musically"),
-    ];
-
-    function openOnce() {
-      if (locked) return;
-      locked = true;
-
-      statusEl.textContent = "読み込み中…";
-
-      // まずは通常URL（これだけで開く端末が多い）
-      location.href = TIKTOK_LITE_URL;
-
-      // Threads内ブラウザは落ちやすいので intent 連打しない
-      if (!isThreadsInApp()) {
-        setTimeout(() => { location.href = INTENTS[0]; }, 250);
-        setTimeout(() => { location.href = INTENTS[1]; }, 500);
-      }
-
-      // 2秒後にロック解除（連打防止）
-      setTimeout(() => { locked = false; }, 2000);
-    }
-
-    openBtn.addEventListener("click", (e) => { e.preventDefault(); openOnce(); });
-    fulltap.addEventListener("click", (e) => { e.preventDefault(); openOnce(); });
-  </script>
-</body>
-</html>
+  });
+</script>
