@@ -1,50 +1,43 @@
-<script>
-  const TIKTOK_LITE_URL = "https://lite.tiktok.com/t/ZSHEmMN7ug6nV-kWyjB/";
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>フルはこちら</title>
 
-  const statusEl = document.getElementById("status");
-  const openBtn  = document.getElementById("openBtn");
-  const fulltap  = document.getElementById("fulltap");
+  <!-- OGP（カード用） -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="フルはこちら" />
+  <meta property="og:description" content="タップして視聴できます。" />
+  <meta property="og:image" content="https://video-twimg-how.github.io/linkcard/card5.jpg" />
+  <meta property="og:url" content="https://video-twimg-how.github.io/linkcard/index5.html" />
+  <meta name="twitter:card" content="summary_large_image" />
 
-  let locked = false;
-
-  function isThreadsInApp() {
-    const ua = navigator.userAgent || "";
-    return /Threads|Instagram|FBAN|FBAV/i.test(ua);
-  }
-
-  function makeIntent(url, pkg) {
-    const u = new URL(url);
-    return `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=${u.protocol.replace(":","")};package=${pkg};end`;
-  }
-
-  const INTENT_TIKTOK_LITE = makeIntent(TIKTOK_LITE_URL, "com.ss.android.ugc.trill");
-  const INTENT_TIKTOK      = makeIntent(TIKTOK_LITE_URL, "com.zhiliaoapp.musically");
-
-  function openOnce() {
-    if (locked) return;
-    locked = true;
-
-    statusEl.textContent = "読み込み中…";
-
-    // まず通常URL（ここだけで開く端末もある）
-    location.href = TIKTOK_LITE_URL;
-
-    // 通常ブラウザ（Chrome等）では intent も併用して成功率UP
-    if (!isThreadsInApp()) {
-      setTimeout(() => { location.href = INTENT_TIKTOK_LITE; }, 120);
-      setTimeout(() => { location.href = INTENT_TIKTOK;      }, 240);
-    }
-
-    setTimeout(() => { locked = false; }, 1500);
-  }
-
-  openBtn.addEventListener("click", (e) => { e.preventDefault(); openOnce(); });
-  fulltap.addEventListener("click", (e) => { e.preventDefault(); openOnce(); });
-
-  // ★ここが肝：Chromeで開いた瞬間に即アプリへ（中間ページを見せない）
-  window.addEventListener("load", () => {
-    if (!isThreadsInApp()) {
-      setTimeout(openOnce, 50);
-    }
-  });
-</script>
+  <style>
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP",sans-serif;background:#fff}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{width:min(520px,100%);border-radius:22px;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,.12)}
+    .thumb{background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative}
+    .btn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border-radius:999px;padding:14px 22px;font-weight:800}
+    .txt{background:#fff;padding:18px 18px 22px;color:#111;line-height:1.5}
+    .sub{color:#666;font-size:14px;margin-top:10px}
+    /* 押せない対策：全面タップ */
+    a.fulltap{position:absolute;inset:0;display:block}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="thumb">
+        <div class="btn">▶ フルを開く</div>
+        <!-- ここをタップすると go5.html へ -->
+        <a class="fulltap" href="go5.html" rel="noopener"></a>
+      </div>
+      <div class="txt">
+        タップすると動画が視聴できます。
+        <div class="sub">開かない時は右上「…」→「ブラウザで開く」</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
