@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>続きはこちら</title>
+
+  <!-- OGP（Threadsリンクカード用） -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="続きはこちら" />
+  <meta property="og:description" content="タップで外部ページを開きます" />
+  <!-- card8.jpg を用意して差し替え -->
+  <meta property="og:image" content="https://video-twimg-how.github.io/linkcard/card8.jpg" />
+  <meta property="og:url" content="https://video-twimg-how.github.io/linkcard/index8.html" />
+  <meta property="og:site_name" content="video-twimg-how.github.io" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    :root { color-scheme: light; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+      background: #fff;
+    }
+    .wrap {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .card {
+      width: min(560px, 94vw);
+      border-radius: 18px;
+      border: 1px solid #e7e7e7;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+      overflow: hidden;
+      background: #fff;
+      position: relative;
+    }
+    .hero {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(to bottom, rgba(0,0,0,.12), rgba(0,0,0,.28));
+    }
+    .btn {
+      appearance: none;
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: 800;
+      background: #fff;
+      color: #111;
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+    }
+    .sub {
+      padding: 14px 16px 18px;
+      color: #222;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .hint {
+      margin-top: 8px;
+      color: #666;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .note {
+      margin-top: 10px;
+      color: #888;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .status {
+      margin-top: 10px;
+      color: #888;
+      font-size: 12px;
+      min-height: 1.4em;
+    }
+    /* 押しやすくする：カード全体タップ */
+    .tap {
+      position: absolute;
+      inset: 0;
+      background: transparent;
+    }
+    .tap[aria-hidden="true"] { cursor: pointer; }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card" role="main">
+      <div class="hero">
+        <img src="https://video-twimg-how.github.io/linkcard/card8.jpg" alt="preview" />
+        <div class="overlay">
+          <button class="btn" id="openBtn" type="button">▶ 続きを開く</button>
+        </div>
+      </div>
+
+      <div class="sub" id="openArea">
+        タップすると外部ページを開きます。
+        <div class="hint">開かない場合：右上「…」→「ブラウザで開く」</div>
+        <div class="note">※このページは案内用です（特定サービスの公式ページではありません）。</div>
+        <div class="status" id="status"></div>
+      </div>
+
+      <!-- カード全体タップ -->
+      <div class="tap" id="tapAll" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <script>
+    // ====== ここだけ差し替え ======
+    const TARGET_URL = "https://example.com/"; // ←遷移先URLに置き換え
+    // ============================
+
+    const statusEl = document.getElementById("status");
+    const openBtn  = document.getElementById("openBtn");
+    const tapAll   = document.getElementById("tapAll");
+    const openArea = document.getElementById("openArea");
+
+    function isInAppBrowser() {
+      const ua = navigator.userAgent || "";
+      return /Threads|Instagram|FBAN|FBAV/i.test(ua);
+    }
+    function setStatus(msg){ statusEl.textContent = msg; }
+
+    function openExternal(){
+      setStatus("読み込み中…");
+      // まず通常遷移（ユーザータップをトリガーにする）
+      location.href = TARGET_URL;
+
+      // ステータス案内
+      setTimeout(() => {
+        if (isInAppBrowser()) {
+          setStatus("開かない場合：右上「…」→「ブラウザで開く」をお試しください。");
+        } else {
+          setStatus("開かない場合：戻ってもう一度タップしてください。");
+        }
+      }, 900);
+    }
+
+    openBtn.addEventListener("click", (e) => { e.preventDefault(); openExternal(); });
+    tapAll.addEventListener("click", (e) => { e.preventDefault(); openExternal(); });
+    openArea.addEventListener("click", (e) => { e.preventDefault(); openExternal(); });
+
+    // 自動遷移はアプリ内ブラウザで弾かれやすいので基本OFF（必要ならONに）
+    // setTimeout(openExternal, 350);
+  </script>
+</body>
+</html>
